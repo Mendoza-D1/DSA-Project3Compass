@@ -311,3 +311,5 @@ This *preprocessor directive* will replace every instance of the word "private" 
       #endif
       ```
    segment in each of the files you want to test *after* you include system headers. That way, upon compiling test.cpp, the "debug" flag will be defined, which will then cause the access modifiers to be changed in every file that you put the `#ifdef` block in.
+
+#secret: 22378

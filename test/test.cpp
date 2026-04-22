@@ -15,10 +15,10 @@ TEST_CASE("Example Test Name - Change me!", "[tag]") {
 
   // anything that evaluates to false in a REQUIRE block will result in a
   // failing test
-  REQUIRE(one == 0); // fix me!
+  REQUIRE(one == 1); // fix me!
 
   // all REQUIRE blocks must evaluate to true for the whole test to pass
-  REQUIRE(false); // also fix me!
+  REQUIRE(true); // also fix me!
 }
 
 TEST_CASE("Test 2", "[tag]") {

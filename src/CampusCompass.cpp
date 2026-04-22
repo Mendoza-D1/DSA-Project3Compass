@@ -20,3 +20,8 @@ bool CampusCompass::ParseCommand(const string &command) {
 
     return is_valid;
 }
+
+bool CampusCompass::InsertStudent(const string& name, const string& ufid, int residence, const vector<string>& classCodes) {
+
+
+}

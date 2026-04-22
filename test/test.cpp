@@ -48,37 +48,23 @@ TEST_CASE("Test 2", "[tag]") {
 
 // This uses C++ "raw strings" and assumes your CampusCompass outputs a string with
 //   the same thing you print.
-TEST_CASE("Example CampusCompass Output Test", "[flag]") {
-  // the following is a "raw string" - you can write the exact input (without
-  //   any indentation!) and it should work as expected
-  // this is based on the input and output of the first public test case
-  string input = R"(6
-insert "Student A" 10000001 1 1 COP3502
-insert "Student B" 10000002 1 1 COP3502
-insert "Student C" 10000003 1 2 COP3502 MAC2311
-dropClass 10000001 COP3502
-remove 10000001
-removeClass COP3502
-)";
+TEST_CASE("Direct Insert Function Test") {
+  CampusCompass compass;
+  REQUIRE(compass.ParseCSV("data/edges.csv", "data/classes.csv") == true);
+  REQUIRE(compass.InsertStudent("Brandon", "45679999", 20, {"COP3530", "MAC2311"}) == true);
 
-  string expectedOutput = R"(successful
-successful
-successful
-successful
-unsuccessful
-2
-)";
+}
 
-  string actualOutput;
 
-  // somehow pass your input into your CampusCompass and parse it to call the
-  // correct functions, for example:
-  /*
-  CampusCompass c;
-  c.parseInput(input)
-  // this would be some function that sends the output from your class into a string for use in testing
-  actualOutput = c.getStringRepresentation()
-  */
+TEST_CASE("Direct Remove Function Test") {
+  CampusCompass compass;
+  REQUIRE(compass.ParseCSV("data/edges.csv", "data/classes.csv") == true);
+  REQUIRE(compass.InsertStudent("Brandon", "45679999", 20, {"COP3530", "MAC2311"}) == true);
+  REQUIRE(compass.RemoveStudent("45679999") == true);
+}
 
-  REQUIRE(actualOutput == expectedOutput);
+TEST_CASE("Remove Nonexistent Student Fails") {
+  CampusCompass compass;
+  REQUIRE(compass.ParseCSV("data/edges.csv", "data/classes.csv") == true);
+  REQUIRE(compass.RemoveStudent("45679999") == false);
 }

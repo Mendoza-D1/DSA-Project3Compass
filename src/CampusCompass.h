@@ -36,6 +36,16 @@ private:
     unordered_map<string, Student> students;
     // perhaps some graph representation?
 
+    bool IsValidUFID(const string& ufid) const;
+    bool IsValidName(const string& name) const;
+    bool IsValidClassCode(const string& code) const;
+    bool ClassExists(const string& code) const;
+
+    int ParseTimeToMinutes(const string& timeStr) const;
+    vector<string> SplitCSVLine(const string& line) const;
+
+    vector<string> TokenizeBySpaces(const string& text) const;
+
 public:
     // Think about what helper functions you will need in the algorithm
     CampusCompass(); // constructor

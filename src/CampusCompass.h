@@ -43,8 +43,8 @@ private:
 
     int ParseTimeToMinutes(const string& timeStr) const;
     vector<string> SplitCSVLine(const string& line) const;
-
     vector<string> TokenizeBySpaces(const string& text) const;
+
 
 public:
     // Think about what helper functions you will need in the algorithm

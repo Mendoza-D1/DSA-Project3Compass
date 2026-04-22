@@ -169,6 +169,18 @@ bool CampusCompass::ParseCommand(const string& command) {
         return RemoveStudent(tokens[1]);
     }
 
+    if (tokens.size() == 3 && tokens[0] == "dropClass") {
+        return DropClass(tokens[1], tokens[2]);
+    }
+
+    if (tokens.size() == 4 && tokens[0] == "replaceClass") {
+        return ReplaceClass(tokens[1], tokens[2], tokens[3]);
+    }
+
+    if (tokens.size() == 2 && tokens[0] == "removeClass") {
+        return RemoveClassForAll(tokens[1]) != -1;
+    }
+
     return false;
 }
 
@@ -278,4 +290,91 @@ bool CampusCompass::RemoveStudent(const string& ufid) {
 
     students.erase(it);
     return true;
+}
+
+bool CampusCompass::DropClass(const string& ufid, const string& classCode) {
+    auto it = students.find(ufid);
+
+    if (it == students.end()) {
+        return false;
+    }
+
+    Student& student = it->second;
+
+    auto classIt = student.classCodes.find(classCode);
+    if (classIt == student.classCodes.end()) {
+        return false;
+    }
+
+    student.classCodes.erase(classIt);
+
+    if (student.classCodes.empty()) {
+        students.erase(it);
+    }
+
+    return true;
+}
+
+bool CampusCompass::ReplaceClass(const string& ufid, const string& oldClassCode, const string& newClassCode) {
+    auto it = students.find(ufid);
+
+    if (it == students.end()) {
+        return false;
+    }
+
+    Student& student = it->second;
+
+    if (student.classCodes.find(oldClassCode) == student.classCodes.end()) {
+        return false;
+    }
+
+    if (!ClassExists(newClassCode)) {
+        return false;
+    }
+
+    if (student.classCodes.find(newClassCode) != student.classCodes.end()) {
+        return false;
+    }
+
+    student.classCodes.erase(oldClassCode);
+    student.classCodes.insert(newClassCode);
+
+    return true;
+}
+
+int CampusCompass::RemoveClassForAll(const string& classCode) {
+    if (!IsValidClassCode(classCode)) {
+        return -1;
+    }
+
+    if (!ClassExists(classCode)) {
+        return -1;
+    }
+
+    int affectedCount = 0;
+    vector<string> studentsToRemove;
+
+    for (auto& pair : students) {
+        Student& student = pair.second;
+
+        auto classIt = student.classCodes.find(classCode);
+        if (classIt != student.classCodes.end()) {
+            student.classCodes.erase(classIt);
+            affectedCount++;
+
+            if (student.classCodes.empty()) {
+                studentsToRemove.push_back(student.ufid);
+            }
+        }
+    }
+
+    if (affectedCount == 0) {
+        return -1;
+    }
+
+    for (const string& ufid : studentsToRemove) {
+        students.erase(ufid);
+    }
+
+    return affectedCount;
 }

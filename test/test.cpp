@@ -46,8 +46,6 @@ TEST_CASE("Test 2", "[tag]") {
 // Note that while this works, I recommend also creating plenty of unit tests for particular functions within your code.
 // This pattern should only be used for final, end-to-end testing.
 
-// This uses C++ "raw strings" and assumes your CampusCompass outputs a string with
-//   the same thing you print.
 TEST_CASE("Direct Insert Function Test") {
   CampusCompass compass;
   REQUIRE(compass.ParseCSV("data/edges.csv", "data/classes.csv") == true);
@@ -67,4 +65,61 @@ TEST_CASE("Remove Nonexistent Student Fails") {
   CampusCompass compass;
   REQUIRE(compass.ParseCSV("data/edges.csv", "data/classes.csv") == true);
   REQUIRE(compass.RemoveStudent("45679999") == false);
+}
+
+TEST_CASE("Direct DropClass Function Test") {
+  CampusCompass compass;
+  REQUIRE(compass.ParseCSV("data/edges.csv", "data/classes.csv") == true);
+
+  REQUIRE(compass.InsertStudent("Brandon", "45679999", 20, {"COP3530", "MAC2311"}) == true);
+  REQUIRE(compass.DropClass("45679999", "COP3530") == true);
+}
+
+TEST_CASE("Drop Last Class Removes Student") {
+  CampusCompass compass;
+  REQUIRE(compass.ParseCSV("data/edges.csv", "data/classes.csv") == true);
+
+  REQUIRE(compass.InsertStudent("Brandon", "45679999", 20, {"COP3530"}) == true);
+  REQUIRE(compass.DropClass("45679999", "COP3530") == true);
+
+  REQUIRE(compass.RemoveStudent("45679999") == false);
+}
+
+TEST_CASE("DropClass Fails If Student Missing") {
+  CampusCompass compass;
+  REQUIRE(compass.ParseCSV("data/edges.csv", "data/classes.csv") == true);
+
+  REQUIRE(compass.DropClass("45679999", "COP3530") == false);
+}
+
+TEST_CASE("Direct ReplaceClass Function Test") {
+  CampusCompass compass;
+  REQUIRE(compass.ParseCSV("data/edges.csv", "data/classes.csv") == true);
+
+  REQUIRE(compass.InsertStudent("Brandon", "45679999", 20, {"COP3530", "MAC2311"}) == true);
+  REQUIRE(compass.ReplaceClass("45679999", "COP3530", "CDA3101") == true);
+}
+
+TEST_CASE("ReplaceClass Fails If Student Missing") {
+  CampusCompass compass;
+  REQUIRE(compass.ParseCSV("data/edges.csv", "data/classes.csv") == true);
+
+  REQUIRE(compass.ReplaceClass("45679999", "COP3530", "CDA3101") == false);
+}
+
+TEST_CASE("Direct RemoveClass Function Test") {
+  CampusCompass compass;
+  REQUIRE(compass.ParseCSV("data/edges.csv", "data/classes.csv") == true);
+
+  REQUIRE(compass.InsertStudent("Brandon", "45679999", 20, {"COP3530", "MAC2311"}) == true);
+  REQUIRE(compass.InsertStudent("Brian", "35459999", 21, {"COP3530"}) == true);
+
+  REQUIRE(compass.RemoveClassForAll("COP3530") == 2);
+}
+
+TEST_CASE("RemoveClass Fails On Bad Class Format") {
+  CampusCompass compass;
+  REQUIRE(compass.ParseCSV("data/edges.csv", "data/classes.csv") == true);
+
+  REQUIRE(compass.RemoveClassForAll("cop3530") == -1);
 }

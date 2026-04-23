@@ -30,7 +30,7 @@ private:
     };
 
     // Think about what member variables you need to initialize
-    unordered_map<int, vector<Edge>> graph;
+    unordered_map<int, vector<Edge>> adjList;
     unordered_map<string, bool> EdgeOpen;
     unordered_map<string, ClassInfo> classes;
     unordered_map<string, Student> students;
@@ -44,7 +44,16 @@ private:
     int ParseTimeToMinutes(const string& timeStr) const;
     vector<string> SplitCSVLine(const string& line) const;
     vector<string> TokenizeBySpaces(const string& text) const;
+    string Trim(const string& text) const;
 
+    string MakeEdgeKey(int a, int b) const;
+    bool IsEdgePresent(int a, int b) const;
+    bool IsEdgeOpenInternal(int a, int b) const;
+
+    bool BFSConnectedInternal(int start, int end) const;
+    unordered_map<int, int> DijkstraDistancesInternal(int start) const;
+    unordered_map<int, int> DijkstraWithParentInternal(int start, unordered_map<int, int>& parent) const;
+    int ComputeStudentZoneCostInternal(const Student& student) const;
 
 public:
     // Think about what helper functions you will need in the algorithm
@@ -66,4 +75,3 @@ public:
 
 
 };
-

@@ -39,7 +39,7 @@ TEST_CASE("Test 2", "[tag]") {
   // affect each other
 }
 
-// Refer to Canvas for a list of required tests. 
+// Refer to Canvas for a list of required tests.
 // We encourage you to write more than required to ensure proper functionality, but only the ones on Canvas will be graded.
 
 // See the following for an example of how to easily test your output.
@@ -122,4 +122,36 @@ TEST_CASE("RemoveClass Fails On Bad Class Format") {
   REQUIRE(compass.ParseCSV("data/edges.csv", "data/classes.csv") == true);
 
   REQUIRE(compass.RemoveClassForAll("cop3530") == -1);
+}
+
+TEST_CASE("Edge starts open after ParseCSV") {
+  CampusCompass compass;
+  REQUIRE(compass.ParseCSV("data/edges.csv", "data/classes.csv") == true);
+
+  REQUIRE(compass.CheckEdgeStatus(1, 2) == "open");
+}
+
+TEST_CASE("CheckEdgeStatus returns DNE for missing edge") {
+  CampusCompass compass;
+  REQUIRE(compass.ParseCSV("data/edges.csv", "data/classes.csv") == true);
+
+  REQUIRE(compass.CheckEdgeStatus(99999, 88888) == "DNE");
+}
+
+/////ParseCommand Tests/////
+///
+TEST_CASE("ParseCommand printShortestEdges test") {
+  CampusCompass compass;
+  REQUIRE(compass.ParseCSV("data/edges.csv", "data/classes.csv") == true);
+
+  REQUIRE(compass.InsertStudent("Brandon", "45679999", 20, {"COP3530"}) == true);
+  REQUIRE(compass.ParseCommand("printShortestEdges 45679999") == true);
+}
+
+TEST_CASE("ParseCommand printStudentZone test") {
+  CampusCompass compass;
+  REQUIRE(compass.ParseCSV("data/edges.csv", "data/classes.csv") == true);
+
+  REQUIRE(compass.InsertStudent("Brandon", "45679999", 20, {"COP3530"}) == true);
+  REQUIRE(compass.ParseCommand("printStudentZone 45679999") == true);
 }
